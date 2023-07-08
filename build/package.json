@@ -1,0 +1,11 @@
+{
+    "name": "altv-docker-build",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "main": "index.js",
+    "dependencies": {
+        "chalk": "^5.2.0",
+        "node-fetch": "^3.3.1"
+    }
+}

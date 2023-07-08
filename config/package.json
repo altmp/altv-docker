@@ -1,0 +1,14 @@
+{
+  "name": "altv-docker-setup",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@iarna/toml": "^2.2.5",
+    "chalk": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/iarna__toml": "^2.0.2"
+  }
+}
