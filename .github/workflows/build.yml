@@ -41,7 +41,10 @@ jobs:
         run: npm i
 
       - name: Build
-        run: node ./build/index.js
+        run: |
+          export ACTIONS_CACHE_URL=$(echo "$ACTIONS_ID_TOKEN_REQUEST_URL" | grep -Po 'https://[^/]+/[^/]+/' | sed  's/pipelines/artifactcache/')
+          export ACTIONS_RUNTIME_TOKEN=$ACTIONS_ID_TOKEN_REQUEST_TOKEN
+          node ./build/index.js cache
         env:
           FORCE_COLOR: 2
 

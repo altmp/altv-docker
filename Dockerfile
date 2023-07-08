@@ -23,6 +23,7 @@ RUN echo '{"loadBytecodeModule":true,"loadCSharpModule":true}' > /opt/altv/.altv
 RUN npm i -g altv-pkg@latest
 
 ADD config /root/setup
+RUN cd /root/setup && npm i
 COPY ./entrypoint.sh /root/
 RUN chmod +x /root/entrypoint.sh
 

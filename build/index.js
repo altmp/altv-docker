@@ -4,6 +4,7 @@ import fetch from 'node-fetch';
 import crypto from 'crypto';
 import { exec } from 'child_process';
 
+const cacheEnabled = process.argv[2] === "cache";
 const CDN_URL = "https://cdn.alt-mp.com";
 
 const modules = ['coreclr-module', 'js-module'];
@@ -91,8 +92,7 @@ async function buildBranch(branch) {
     const tags = generateTags(branch, version, modulesVersions);
     console.log(chalk.gray('Building with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
 
-    await sh(`docker pull ${imageName}:${branch}`);
-    await sh(`docker build . ${tags.map(e => `-t ${imageName}:${e}`).join(' ')}`);
+    await sh(`docker ${cacheEnabled ? 'buildx build --load . --cache-to "type=gha,mode=max" --cache-from type=gha' : 'build .'} ${tags.map(e => `-t ${imageName}:${e}`).join(' ')}`);
     console.log(chalk.green('Build of branch ') + chalk.white(chalk.bold(branch)) + chalk.green(' was successful'));
 }
 
