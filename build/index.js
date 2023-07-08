@@ -47,7 +47,9 @@ function generateTags(branch, version, modulesVersions) {
         branch, // dev
     ];
 
-    if (branch !== "release") {
+    if (branch === "release") {
+        tags.push("latest");
+    } else {
         tags.push(version.replace(/\d+$/, '')); // 15.4-dev
     }
 

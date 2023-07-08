@@ -22,7 +22,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -42,6 +42,8 @@ jobs:
 
       - name: Build
         run: node ./build/index.js
+        env:
+          FORCE_COLOR: 2
 
       - name: Push to Docker Hub
         run: docker image push -a altmp/altv-server
