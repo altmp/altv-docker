@@ -33,12 +33,14 @@ USER root
 ARG BRANCH=release
 ENV ALTV_BRANCH=$BRANCH 
 
-RUN cd /opt/altv && npx altv-pkg ${BRANCH}
-RUN chmod +x /opt/altv/altv-server
-
 WORKDIR /opt/altv/
 
 EXPOSE 7788/udp
 EXPOSE 7788/tcp
+
+ARG CACHEBUST=1
+
+RUN cd /opt/altv && npx altv-pkg ${BRANCH}
+RUN chmod +x /opt/altv/altv-server
 
 ENTRYPOINT [ "/root/entrypoint.sh" ]

@@ -92,7 +92,11 @@ async function buildBranch(branch) {
     const tags = generateTags(branch, version, modulesVersions);
     console.log(chalk.gray('Building with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
 
-    await sh(`docker ${cacheEnabled ? 'buildx build --load . --cache-to "type=gha,mode=max" --cache-from type=gha' : 'build .'} ${tags.map(e => `-t ${imageName}:${e}`).join(' ')}`);
+    const serializedTags = tags.map(e => `-t ${imageName}:${e}`).join(' ');
+    const command = cacheEnabled ? 'buildx build --load . --cache-to "type=gha,mode=max" --cache-from type=gha' : 'build .';
+    const args = `--build-arg CACHEBUST=${Date.now()} --build-arg BRANCH=${branch}`;
+    await sh(`docker ${command} ${args} ${serializedTags}`);
+
     console.log(chalk.green('Build of branch ') + chalk.white(chalk.bold(branch)) + chalk.green(' was successful'));
 }
 
