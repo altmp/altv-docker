@@ -11,6 +11,7 @@ RUN wget https://dot.net/v1/dotnet-install.sh
 RUN chmod +x dotnet-install.sh
 RUN ./dotnet-install.sh -c 6.0
 ENV PATH="${PATH}:/root/.dotnet/"
+ENV DOTNET_ROOT="/root/.dotnet"
 
 RUN dotnet --version
 

@@ -7,7 +7,7 @@ import { exec } from 'child_process';
 const cacheEnabled = process.argv[2] === "cache";
 const CDN_URL = "https://cdn.alt-mp.com";
 
-const modules = ['coreclr-module', 'js-module'];
+const baseModules = ['coreclr-module', 'js-module'];
 const branches = ['dev', 'rc', 'release'];
 const platform = 'x64_win32';
 const imageName = 'altmp/altv-server';
@@ -59,6 +59,12 @@ function generateTags(branch, version, modulesVersions) {
 
 async function buildBranch(branch) {
     console.log(chalk.gray('Building branch ') + chalk.white(chalk.bold(branch)));
+
+    const modules = [...baseModules];
+    if (branch === "release") {
+        modules.push("js-bytecode-module");
+    }
+
     const serverUpdateReq = await fetch(`${CDN_URL}/server/${branch}/${platform}/update.json`);
     const serverUpdate = JSON.parse(await serverUpdateReq.text());
     const version = serverUpdate.version;
@@ -93,7 +99,7 @@ async function buildBranch(branch) {
     console.log(chalk.gray('Building with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
 
     const serializedTags = tags.map(e => `-t ${imageName}:${e}`).join(' ');
-    const command = cacheEnabled ? 'buildx build --load . --cache-to "type=gha,mode=max" --cache-from type=gha' : 'build .';
+    const command = cacheEnabled ? 'buildx build . --cache-to "type=gha,mode=max" --cache-from type=gha' : 'build .';
     const args = `--build-arg CACHEBUST=${Date.now()} --build-arg BRANCH=${branch}`;
     await sh(`docker ${command} ${args} ${serializedTags}`);
 

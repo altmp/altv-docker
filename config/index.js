@@ -68,6 +68,12 @@ function run() {
         if (fs.existsSync('./server.toml') && bool('OVERRIDE_EXISTING_CONFIG')) {
             debugLog('Found existing ' + chalk.bold('server.toml') + ', but overriding it with environment parameters, because ' + chalk.bold('OVERRIDE_EXISTING_CONFIG') + ' is true');
         }
+        
+        const defaultModules = [ 'js-module', 'csharp-module' ];
+
+        if (process.env.ALTV_BRANCH === 'release') {
+            defaultModules.push('js-bytecode-module');
+        }
 
         const settings = {
             name: str('NAME'),
@@ -105,7 +111,7 @@ function run() {
             spawnAfterConnect: bool('SPAWN_AFTER_CONNECT'),
             hashClientResourceName: bool('HASH_CLIENT_RESOURCE_NAME'),
             resources: arr('RESOURCES') ?? ['*'],
-            modules: arr('MODULES') ?? ['js-module', 'csharp-module', 'js-bytecode-module'],
+            modules: arr('MODULES') ?? defaultModules,
             'dlc-whitelist': arr('DLC_WHITELIST'),
             voice: notEmpty({
                 bitrate: num('VOICE_BITRATE'),
