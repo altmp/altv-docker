@@ -99,7 +99,7 @@ async function buildBranch(branch) {
     console.log(chalk.gray('Building with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
 
     const serializedTags = tags.map(e => `-t ${imageName}:${e}`).join(' ');
-    const command = cacheEnabled ? 'buildx build . --cache-to "type=gha,mode=max" --cache-from type=gha' : 'build .';
+    const command = cacheEnabled ? 'buildx build --load . --cache-to "type=gha,mode=max" --cache-from type=gha' : 'build .';
     const args = `--build-arg CACHEBUST=${Date.now()} --build-arg BRANCH=${branch}`;
     await sh(`docker ${command} ${args} ${serializedTags}`);
 
