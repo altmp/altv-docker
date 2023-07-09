@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0-bullseye-slim-amd64 as base
+FROM mcr.microsoft.com/dotnet/sdk:7.0-bullseye-slim-amd64 as base
 
 USER root
 
