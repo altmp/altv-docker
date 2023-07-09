@@ -9,7 +9,7 @@
 [![](https://img.shields.io/badge/alt:V_website-008736?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDUiIGhlaWdodD0iMzkiIHZpZXdCb3g9IjAgMCA0NSAzOSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0wIDBMMjIuNSAzOUw0NSAwSDE1LjAxOTJMMjIuNDk5NiAxMy4wMjZMMjYuMjQ5NyA2LjU3OEgzMy43MTA2TDIyLjUgMjUuOTQ4TDcuNTE5MzggMEgwWiIgZmlsbD0iI0YxRjJGMiIvPgo8L3N2Zz4K&logoColor=white)](https://altv.mp/)
 <br/>
 
-> **Warning**:<br/>This image is available for versions starting from alt:V 15, which is not fully released yet. Until the final alt:V 15 release this image will be only available for the `dev` branch. For productive use see the [unofficial image &nearr;](https://github.com/eisengrind/docker-altv-server) meanwhile.
+> **Warning**:<br/>This image is available for versions starting from alt:V 15, which is currently under development and not available for productive use. Until the final alt:V 15 release this image will be only available for the `dev` branch. For productive use see the [unofficial image &nearr;](https://github.com/eisengrind/docker-altv-server) meanwhile.
 
 ## Usage
 
