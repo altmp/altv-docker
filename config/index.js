@@ -105,6 +105,7 @@ function run() {
             sendPlayerNames: bool('ALTV_SEND_PLAYER_NAMES'),
             spawnAfterConnect: bool('ALTV_SPAWN_AFTER_CONNECT'),
             hashClientResourceName: bool('ALTV_HASH_CLIENT_RESOURCE_NAME'),
+            sharedProjectKey: str('ALTV_SHARED_PROJECT_KEY'),
             resources: arr('ALTV_RESOURCES') ?? ['*'],
             modules: arr('ALTV_MODULES') ?? defaultModules,
             'dlc-whitelist': arr('ALTV_DLC_WHITELIST'),
