@@ -34,6 +34,12 @@ function num(env) {
     throw new ParseError('Failed to parse ' + chalk.bold(env) + ': ' + chalk.white(chalk.bold(val) + ' is not a number'));
 }
 
+function jsonObj(env) {
+    const val = process.env[env];
+    if (val == null) return undefined;
+    return JSON.parse(val);
+}
+
 function bool(env) {
     const val = process.env[env];
     if (val == null) return undefined;
@@ -126,6 +132,7 @@ function run() {
                 streamer: num('ALTV_THREADS_STREAMER'),
                 migration: num('ALTV_THREADS_MIGRATION'),
             }),
+            pools: jsonObj('ALTV_POOLS'),
             'csharp-module': obj({
                 disableDependencyDownload: bool('ALTV_CSHARP_DISABLE_DEPENDENCY_DOWNLOAD')
             }),

@@ -29,10 +29,11 @@ There are two ways to specify server configurations:
 #### Configuration via environment variables
 
 This image allows you to set all existing server settings by specifying environment variables.
-All variables follow the syntax `ALTV_SETTING_NAME`, for a complete list of options look at the [setup script](config/index.js#L74).
+All variables follow the syntax `ALTV_SETTING_NAME`, for a complete list of options look at the [setup script](config/index.js#L80).
 
-In case of array values (`arr('...')`), specify a comma separated string.<br>
-In case of boolean values (`bool('...')`) specify `true`, `yes`, `y` or `1` for true, or `false`, `no`, `n`, or `0` for false.
+In case of array values (`arr('...')`) specify a comma separated string.<br>
+In case of boolean values (`bool('...')`) specify `true`, `yes`, `y` or `1` for true, or `false`, `no`, `n`, or `0` for false.<br>
+In case of JSON values (`jsonObj('...')`) specify a valid JSON object
 
 Example:
 ```bash
