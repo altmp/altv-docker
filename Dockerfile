@@ -36,5 +36,7 @@ ARG CACHEBUST=1
 
 RUN cd /altv && npx altv-pkg ${BRANCH}
 RUN chmod +x /altv/altv-server
+RUN chmod +x /altv/altv-crash-handler
+
 
 ENTRYPOINT [ "/root/entrypoint.sh" ]
