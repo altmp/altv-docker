@@ -49,6 +49,3 @@ jobs:
           node ./build/index.js cache
         env:
           FORCE_COLOR: 2
-
-      - name: Push to Docker Hub
-        run: docker image push -a altmp/altv-server
