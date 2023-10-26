@@ -1,7 +1,7 @@
 <img height="128" src=".github/logo.png" />
 
 # alt:V server Docker image
-#### Docker image to easily deploy your alt:V server 
+#### Docker images to easily deploy your alt:V game and voice servers 
 **[Docker Hub &nearr;](https://hub.docker.com/r/altmp/altv-server)** • **[Got an issue?](https://github.com/altmp/altv-docker/issues/new)**
 <br><br>
 [![](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.altv.mp/)
@@ -11,9 +11,17 @@
 
 ## Usage
 
-To start a minimal release server run:
+To start a minimal game server run:
 ```bash
 docker run --rm -it -p 7788:7788 -p 7788:7788/udp altmp/altv-server:release
+```
+
+To start a minimal voice server run:
+```bash
+docker run --rm -it \
+    -p 7799:7799/udp \
+    -e ALTV_PLAYER_PORT=7799 -e ALTV_PLAYER_HOST=your.public.ip \
+    altmp/altv-voice-server:release
 ```
 
 ## Configuration
@@ -27,7 +35,7 @@ There are two ways to specify server configurations:
 #### Configuration via environment variables
 
 This image allows you to set all existing server settings by specifying environment variables.
-All variables follow the syntax `ALTV_SETTING_NAME`, for a complete list of options look at the [setup script](config/index.js#L80).
+All variables follow the syntax `ALTV_SETTING_NAME`, for a complete list of options look at the [game server setup script](config/server.js) or [voice server setup script](config/voice-server.js).
 
 In case of array values (`arr('...')`) specify a comma separated string.<br>
 In case of boolean values (`bool('...')`) specify `true`, `yes`, `y` or `1` for true, or `false`, `no`, `n`, or `0` for false.<br>
@@ -43,8 +51,8 @@ docker run --rm -it \
 
 #### Configuration via volumes
 
-You can provide your own `server.toml` to configure your server.
-To do this, mount the file to `/altv/server.toml` and specify the environment variable `ALTV_USE_ENV_CONFIG=false`.
+You can provide your own config file to configure your server.
+To do this, mount the file to `/altv/server.toml` (or `/altv/voice.toml` for voice server) and specify the environment variable `ALTV_USE_ENV_CONFIG=false`.
 
 Example:
 ```bash
@@ -57,7 +65,7 @@ docker run --rm -it \
 
 ### Arguments
 
-Arguments of the Docker image get passed directly to `altv-server`.
+Arguments of the Docker image get passed directly to `altv-server` or `altv-voice-server`.
 See [CLI arguments &nearr;](https://go.altv.mp/server-cli) for more info.
 
 Example:

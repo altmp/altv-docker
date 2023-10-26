@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 cd /altv
-node /root/setup/index.js
+node /root/setup/server.js
 ./altv-server "$@"

@@ -13,11 +13,13 @@ FROM base as ready
 USER root
 
 RUN mkdir /altv
-RUN echo '{"loadBytecodeModule":true,"loadCSharpModule":true}' > /altv/.altvpkgrc.json
+RUN echo '{"loadVoiceServer":true}' > /altv/.altvpkgrc.json
 RUN npm i -g altv-pkg@latest
 
 ADD config /root/setup
 RUN cd /root/setup && npm i
+RUN cd /root/setup && rm server.js package-lock.json
+
 COPY ./entrypoint.sh /root/
 RUN chmod +x /root/entrypoint.sh
 
@@ -35,8 +37,8 @@ EXPOSE 7788/tcp
 ARG CACHEBUST=1
 
 RUN cd /altv && npx altv-pkg ${BRANCH}
-RUN chmod +x /altv/altv-server
-RUN chmod -f +x /altv/altv-crash-handler || true
-
+RUN rm -rf altv-server data modules libnode*
+RUN chmod +x /altv/altv-voice-server
+RUN chmod +x /altv/altv-crash-handler
 
 ENTRYPOINT [ "/root/entrypoint.sh" ]

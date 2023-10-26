@@ -10,7 +10,8 @@ const CDN_URL = "https://cdn.alt-mp.com";
 const baseModules = ['coreclr-module', 'js-module'];
 const branches = ['dev', 'rc', 'release'];
 const platform = 'x64_win32';
-const imageName = 'altmp/altv-server';
+const serverImageName = 'altmp/altv-server';
+const voiceServerImageName = 'altmp/altv-voice-server';
 
 /**
  * Execute simple shell command (async wrapper).
@@ -95,13 +96,27 @@ async function buildBranch(branch) {
         }
     }
 
-    const tags = generateTags(branch, version, modulesVersions);
-    console.log(chalk.gray('Building with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
+    {
+        const tags = generateTags(branch, version, modulesVersions);
+        console.log(chalk.gray('Building server with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
 
-    const serializedTags = tags.map(e => `-t ${imageName}:${e}`).join(' ');
-    const command = cacheEnabled ? 'buildx build --load . --cache-to "type=gha,mode=max" --cache-from type=gha' : 'build .';
-    const args = `--build-arg CACHEBUST=${Date.now()} --build-arg BRANCH=${branch}`;
-    await sh(`docker ${command} ${args} ${serializedTags}`);
+        const serializedTags = tags.map(e => `-t ${serverImageName}:${e}`).join(' ');
+        const command = cacheEnabled ? 'buildx build --load . --cache-to "type=gha,mode=max" --cache-from type=gha' : 'build .';
+        const args = `--build-arg CACHEBUST=${Date.now()} --build-arg BRANCH=${branch}`;
+        await sh(`docker ${command} ${args} ${serializedTags}`, './server');
+        console.log(chalk.green('Server on branch ') + chalk.white(chalk.bold(branch)) + chalk.green(' built successfully'));
+    }
+
+    {
+        const tags = generateTags(branch, version, []);
+        console.log(chalk.gray('Building voice server with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
+
+        const serializedTags = tags.map(e => `-t ${voiceServerImageName}:${e}`).join(' ');
+        const command = cacheEnabled ? 'buildx build --load . --cache-to "type=gha,mode=max" --cache-from type=gha' : 'build .';
+        const args = `--build-arg CACHEBUST=${Date.now()} --build-arg BRANCH=${branch}`;
+        await sh(`docker ${command} ${args} ${serializedTags}`, './voice-server');
+        console.log(chalk.green('Voice server on branch ') + chalk.white(chalk.bold(branch)) + chalk.green(' built successfully'));
+    }
 
     console.log(chalk.green('Build of branch ') + chalk.white(chalk.bold(branch)) + chalk.green(' was successful'));
 }
