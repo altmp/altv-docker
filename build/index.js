@@ -101,7 +101,7 @@ async function buildBranch(branch) {
         console.log(chalk.gray('Building server with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
 
         const serializedTags = tags.map(e => `-t ${serverImageName}:${e}`).join(' ');
-        const command = cacheEnabled ? 'buildx build --load . --cache-to "type=gha,mode=max" --cache-from type=gha' : 'build .';
+        const command = cacheEnabled ? `buildx build --load . --push --cache-to "type=inline" --cache-from "type=registry,ref=${serverImageName}"` : 'build .';
         const args = `--build-arg CACHEBUST=${Date.now()} --build-arg BRANCH=${branch}`;
         await sh(`docker ${command} ${args} ${serializedTags} -f ./server/Dockerfile`);
         console.log(chalk.green('Server on branch ') + chalk.white(chalk.bold(branch)) + chalk.green(' built successfully'));
@@ -112,7 +112,7 @@ async function buildBranch(branch) {
         console.log(chalk.gray('Building voice server with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
 
         const serializedTags = tags.map(e => `-t ${voiceServerImageName}:${e}`).join(' ');
-        const command = cacheEnabled ? 'buildx build --load . --cache-to "type=gha,mode=max" --cache-from type=gha' : 'build .';
+        const command = cacheEnabled ? `buildx build --load . --push --cache-to "type=inline" --cache-from "type=registry,ref=${voiceServerImageName}"` : 'build .';
         const args = `--build-arg CACHEBUST=${Date.now()} --build-arg BRANCH=${branch}`;
         await sh(`docker ${command} ${args} ${serializedTags} -f ./voice-server/Dockerfile`);
         console.log(chalk.green('Voice server on branch ') + chalk.white(chalk.bold(branch)) + chalk.green(' built successfully'));
