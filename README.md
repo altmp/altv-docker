@@ -21,7 +21,7 @@ To start a minimal voice server run:
 docker run --rm -it -p 7799:7799/udp altmp/altv-voice-server:release
 ```
 
-To start server with voice using Docker Compose see [example docker-compose.yml file](docker-compose.yml) (replace your.public.ip with your public IP).
+To start server with voice using Docker Compose see [example docker-compose.yml file](docker-compose.yml) (replace `your.public.ip` with your public IP).
 
 ## Configuration
 
