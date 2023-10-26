@@ -50,7 +50,7 @@ process.exit(generate('server.toml', () => {
         allowUnknownRPCEvents: bool('ALTV_ALLOW_UNKNOWN_RPC_EVENTS'),
         voice: obj({
             bitrate: num('ALTV_VOICE_BITRATE'),
-            externalSecret: str('ALTV_VOICE_EXTERNAL_SECRET'),
+            externalSecret: num('ALTV_VOICE_EXTERNAL_SECRET'),
             externalHost: str('ALTV_VOICE_EXTERNAL_HOST'),
             externalPort: num('ALTV_VOICE_EXTERNAL_PORT'),
             externalPublicHost: str('ALTV_VOICE_EXTERNAL_PUBLIC_HOST'),
