@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+
+  server:
+    image: altmp/altv-server
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    ports:
+      - '7788:7788'
+      - '7788:7788/udp'
+    environment:
+      - ALTV_VOICE_EXTERNAL_HOST=voice
+      - ALTV_VOICE_EXTERNAL_PORT=7798
+      - ALTV_VOICE_EXTERNAL_PUBLIC_HOST=your.public.ip
+      - ALTV_VOICE_EXTERNAL_PUBLIC_PORT=7799
+      - ALTV_VOICE_EXTERNAL_SECRET=1234567890
+
+  voice:
+    image: altmp/altv-voice-server
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    ports:
+      - '7799:7799/udp'
+    environment:
+      - ALTV_PORT=7798
+      - ALTV_PLAYER_PORT=7799
+      - ALTV_SECRET=1234567890

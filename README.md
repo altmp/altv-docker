@@ -1,8 +1,8 @@
 <img height="128" src=".github/logo.png" />
 
 # alt:V server Docker image
-#### Docker images to easily deploy your alt:V game and voice servers 
-**[Docker Hub &nearr;](https://hub.docker.com/r/altmp/altv-server)** • **[Got an issue?](https://github.com/altmp/altv-docker/issues/new)**
+#### Docker images to easily deploy your alt:V game and voice servers
+**[Docker Hub (game server) &nearr;](https://hub.docker.com/r/altmp/altv-server)** • **[Docker Hub (voice server) &nearr;](https://hub.docker.com/r/altmp/altv-voice-server)** • **[Got an issue?](https://github.com/altmp/altv-docker/issues/new)**
 <br><br>
 [![](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.altv.mp/)
 [![](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://go.altv.mp/patreon/)
@@ -18,11 +18,10 @@ docker run --rm -it -p 7788:7788 -p 7788:7788/udp altmp/altv-server:release
 
 To start a minimal voice server run:
 ```bash
-docker run --rm -it \
-    -p 7799:7799/udp \
-    -e ALTV_PLAYER_PORT=7799 -e ALTV_PLAYER_HOST=your.public.ip \
-    altmp/altv-voice-server:release
+docker run --rm -it -p 7799:7799/udp altmp/altv-voice-server:release
 ```
+
+To start server with voice using Docker Compose see [example docker-compose.yml file](docker-compose.yml) (replace your.public.ip with your public IP).
 
 ## Configuration
 
