@@ -55,12 +55,12 @@ function generateTags(branch, version, modulesVersions) {
         tags.push(version.replace(/\d+$/, '')); // 15.4-dev
     }
 
-    return tags;
+    return [buildHash, tags];
 }
 
-async function buildDocker(imageName, tags, branch, dockerfilePath){
+async function buildDocker(imageName, tags, branch, dockerfilePath, cacheKey){
     const command = cacheEnabled ? `buildx build . --push --cache-to "type=inline" --cache-from "type=registry,ref=${imageName}"` : 'build .';
-    const args = `--build-arg CACHEBUST=${Date.now()} --build-arg BRANCH=${branch}`;
+    const args = `--build-arg CACHEBUST=${cacheKey ?? Date.now()} --build-arg BRANCH=${branch}`;
     const serializedTags = tags.map(tag => `-t ${imageName}:${tag}`).join(' ');
     await sh(`docker ${command} ${args} ${serializedTags} -f ${dockerfilePath}`);
 }
@@ -104,16 +104,16 @@ async function buildBranch(branch) {
     }
 
     {
-        const tags = generateTags(branch, version, modulesVersions);
+        const [buildHash, tags] = generateTags(branch, version, modulesVersions);
         console.log(chalk.gray('Building server with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
-        await buildDocker(serverImageName, tags, branch, './server/Dockerfile');
+        await buildDocker(serverImageName, tags, branch, './server/Dockerfile', buildHash);
         console.log(chalk.green('Server on branch ') + chalk.white(chalk.bold(branch)) + chalk.green(' built successfully'));
     }
 
     {
-        const tags = generateTags(branch, version, []);
+        const [buildHash, tags] = generateTags(branch, version, []);
         console.log(chalk.gray('Building voice server with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
-        await buildDocker(voiceServerImageName, tags, branch, './voice-server/Dockerfile');
+        await buildDocker(voiceServerImageName, tags, branch, './voice-server/Dockerfile', buildHash);
         console.log(chalk.green('Voice server on branch ') + chalk.white(chalk.bold(branch)) + chalk.green(' built successfully'));
     }
 
