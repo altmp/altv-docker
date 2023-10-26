@@ -16,11 +16,11 @@ RUN mkdir /altv
 RUN echo '{"loadBytecodeModule":true,"loadCSharpModule":true}' > /altv/.altvpkgrc.json
 RUN npm i -g altv-pkg@latest
 
-ADD ../config /root/setup
+ADD ./config /root/setup
 RUN cd /root/setup && npm i
 RUN cd /root/setup && rm voice-server.js package-lock.json
 
-COPY ./entrypoint.sh /root/
+COPY ./server/entrypoint.sh /root/
 RUN chmod +x /root/entrypoint.sh
 
 FROM ready as downloaded
