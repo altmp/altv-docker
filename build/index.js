@@ -26,7 +26,7 @@ async function sh(cmd, cwd) {
             if (err) {
                 err.cwd = cwd;
                 console.error(chalk.red(`Failed to execute ${cmd} in ${cwd || '.'}:\n${String(err)}`));
-                resolve(undefined);
+                reject(undefined);
             } else {
                 resolve({ stdout, stderr });
             }

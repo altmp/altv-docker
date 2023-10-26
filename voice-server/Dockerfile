@@ -16,7 +16,7 @@ RUN mkdir /altv
 RUN echo '{"loadVoiceServer":true}' > /altv/.altvpkgrc.json
 RUN npm i -g altv-pkg@latest
 
-ADD config /root/setup
+ADD ../config /root/setup
 RUN cd /root/setup && npm i
 RUN cd /root/setup && rm server.js package-lock.json
 
