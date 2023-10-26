@@ -58,6 +58,13 @@ function generateTags(branch, version, modulesVersions) {
     return tags;
 }
 
+async function buildDocker(imageName, tags, branch, dockerfilePath){
+    const command = cacheEnabled ? `buildx build . --push --cache-to "type=inline" --cache-from "type=registry,ref=${imageName}"` : 'build .';
+    const args = `--build-arg CACHEBUST=${Date.now()} --build-arg BRANCH=${branch}`;
+    const serializedTags = tags.map(tag => `-t ${imageName}:${tag}`).join(' ');
+    await sh(`docker ${command} ${args} ${serializedTags} -f ${dockerfilePath}`);
+}
+
 async function buildBranch(branch) {
     console.log(chalk.gray('Building branch ') + chalk.white(chalk.bold(branch)));
 
@@ -99,22 +106,14 @@ async function buildBranch(branch) {
     {
         const tags = generateTags(branch, version, modulesVersions);
         console.log(chalk.gray('Building server with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
-
-        const serializedTags = tags.map(e => `-t ${serverImageName}:${e}`).join(' ');
-        const command = cacheEnabled ? `buildx build . --push --cache-to "type=inline" --cache-from "type=registry,ref=${serverImageName}"` : 'build .';
-        const args = `--build-arg CACHEBUST=${Date.now()} --build-arg BRANCH=${branch}`;
-        await sh(`docker ${command} ${args} ${serializedTags} -f ./server/Dockerfile`);
+        await buildDocker(serverImageName, tags, branch, './server/Dockerfile');
         console.log(chalk.green('Server on branch ') + chalk.white(chalk.bold(branch)) + chalk.green(' built successfully'));
     }
 
     {
         const tags = generateTags(branch, version, []);
         console.log(chalk.gray('Building voice server with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
-
-        const serializedTags = tags.map(e => `-t ${voiceServerImageName}:${e}`).join(' ');
-        const command = cacheEnabled ? `buildx build . --push --cache-to "type=inline" --cache-from "type=registry,ref=${voiceServerImageName}"` : 'build .';
-        const args = `--build-arg CACHEBUST=${Date.now()} --build-arg BRANCH=${branch}`;
-        await sh(`docker ${command} ${args} ${serializedTags} -f ./voice-server/Dockerfile`);
+        await buildDocker(voiceServerImageName, tags, branch, './voice-server/Dockerfile');
         console.log(chalk.green('Voice server on branch ') + chalk.white(chalk.bold(branch)) + chalk.green(' built successfully'));
     }
 
@@ -122,6 +121,7 @@ async function buildBranch(branch) {
 }
 
 async function run() {
+    console.log(chalk.gray('Building alt:V Docker images with ') + chalk.white(chalk.bold(cacheEnabled ? 'cache (images will be pushed automatically)' : 'no cache')));
     for (const branch of branches) {
         await buildBranch(branch);
     }
