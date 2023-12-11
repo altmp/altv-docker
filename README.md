@@ -2,7 +2,7 @@
 
 # alt:V server Docker image
 #### Docker images to easily deploy your alt:V game and voice servers
-**[Docker Hub (game server) &nearr;](https://hub.docker.com/r/altmp/altv-server)** • **[Docker Hub (voice server) &nearr;](https://hub.docker.com/r/altmp/altv-voice-server)** • **[Got an issue?](https://github.com/altmp/altv-docker/issues/new)**
+**[Docker Hub (game server) &nearr;](https://hub.docker.com/r/altmp/altv-server)** • **[Docker Hub (voice server) &nearr;](https://hub.docker.com/r/altmp/altv-voice-server)** • **[Got an issue?](../../issues/new)**
 <br><br>
 [![](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.altv.mp/)
 [![](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://go.altv.mp/patreon/)
