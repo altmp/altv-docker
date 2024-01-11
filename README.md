@@ -91,8 +91,10 @@ docker run --rm -it \
 
 ## Modules
 
-By default, this image includes [JS Module &nearr;](https://github.com/altmp/altv-js-module) and [C# Module &nearr;](https://github.com/altmp/coreclr-module) on all branches.
-On `release` branch this image also includes [JS Bytecode Module &nearr;](https://github.com/altmp/altv-js-bytecode).<br>
+By default, this image includes [JS Module &nearr;](https://github.com/altmp/altv-js-module) and [C# Module &nearr;](https://github.com/altmp/coreclr-module). \
+Tags that contain `-js` (e.g. `release-js` or `16-dev-js`) include [JS Module &nearr;](https://github.com/altmp/altv-js-module) only, for smaller image size. \
+On `release` branch this image also includes [JS Bytecode Module &nearr;](https://github.com/altmp/altv-js-bytecode). \
+\
 To load custom modules add them to `/altv/modules`, and specify custom modules array via configuration.
 
 Example:

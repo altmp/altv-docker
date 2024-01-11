@@ -1,7 +1,11 @@
 import { obj, str, num, arr, bool, jsonObj, exists, generate } from './base.js';
 
 process.exit(generate('server.toml', () => {
-    const defaultModules = [ 'js-module', 'csharp-module' ];
+    const defaultModules = [ 'js-module' ];
+
+    if (process.env.ALTV_MODULE_TYPE === 'all') {
+        defaultModules.push('csharp-module');
+    }
 
     if (process.env.ALTV_BRANCH === 'release') {
         defaultModules.push('js-bytecode-module');

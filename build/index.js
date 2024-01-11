@@ -7,7 +7,6 @@ import { exec } from 'child_process';
 const cacheEnabled = process.argv[2] === "cache";
 const CDN_URL = "https://cdn.alt-mp.com";
 
-const baseModules = ['coreclr-module', 'js-module'];
 const branches = ['dev', 'rc', 'release'];
 const platform = 'x64_win32';
 const serverImageName = 'altmp/altv-server';
@@ -40,37 +39,42 @@ function sha1(input) {
     return crypto.createHash('sha1').update(input).digest('hex');
 }
 
-function generateTags(branch, version, modulesVersions) {
+function generateTags(branch, version, moduleType, modulesVersions) {
     const buildHash = sha1(`${branch}-${version}-${modulesVersions.join('-')}`);
+    const modulePostfix = moduleType === "js" ? "-js" : "";
     const tags = [ 
-        version + '-' + buildHash, // 15.4-dev28-ae27872adf6123e023f89a650a6b3c7b96e85fca
-        version, // 15.4-dev28
-        version.replace(/\.\d+|\d+$/g, ''), // 15-dev or 15 on release
-        branch, // dev
+        version + '-' + modulePostfix + buildHash, // 15.4-dev28-ae27872adf6123e023f89a650a6b3c7b96e85fca
+        version + modulePostfix, // 15.4-dev28
+        version.replace(/\.\d+|.\d+$/g, '') + modulePostfix, // 15-dev or 15 on release
+        branch + modulePostfix, // dev
     ];
 
-    if (branch === "release") {
+    if (branch === "release" && moduleType === "all") {
         tags.push("latest");
     } else {
-        tags.push(version.replace(/\d+$/, '')); // 15.4-dev
+        tags.push(version.replace(/.\d+$/, '') + modulePostfix); // 15.4-dev
     }
 
     return [buildHash, tags];
 }
 
-async function buildDocker(imageName, tags, branch, dockerfilePath, cacheKey){
+async function buildDocker(imageName, tags, branch, dockerfilePath, moduleType, cacheKey){
     const command = cacheEnabled ? `buildx build . --push --cache-to "type=inline" --cache-from "type=registry,ref=${imageName}"` : 'build .';
-    const args = `--build-arg CACHEBUST=${cacheKey ?? Date.now()} --build-arg BRANCH=${branch}`;
+    const args = `--platform linux/amd64 --build-arg CACHEBUST=${cacheKey ?? Date.now()} --build-arg MODULES=${moduleType} --build-arg BRANCH=${branch}`;
     const serializedTags = tags.map(tag => `-t ${imageName}:${tag}`).join(' ');
     await sh(`docker ${command} ${args} ${serializedTags} -f ${dockerfilePath}`);
 }
 
-async function buildBranch(branch) {
-    console.log(chalk.gray('Building branch ') + chalk.white(chalk.bold(branch)));
+async function buildBranch(branch, moduleType) {
+    console.log(chalk.gray('Building branch ') + chalk.white(chalk.bold(branch)) + chalk.gray(' with modules ') + chalk.white(chalk.bold(moduleType)));
 
-    const modules = [...baseModules];
+    const modules = ["js-module"];
     if (branch === "release") {
         modules.push("js-bytecode-module");
+    }
+    
+    if (modules === "all") {
+        modules.push('coreclr-module')
     }
 
     const serverUpdateReq = await fetch(`${CDN_URL}/server/${branch}/${platform}/update.json`);
@@ -104,16 +108,16 @@ async function buildBranch(branch) {
     }
 
     {
-        const [buildHash, tags] = generateTags(branch, version, modulesVersions);
+        const [buildHash, tags] = generateTags(branch, version, moduleType, modulesVersions);
         console.log(chalk.gray('Building server with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
-        await buildDocker(serverImageName, tags, branch, './server/Dockerfile', buildHash);
+        await buildDocker(serverImageName, tags, branch, './server/Dockerfile', moduleType, buildHash);
         console.log(chalk.green('Server on branch ') + chalk.white(chalk.bold(branch)) + chalk.green(' built successfully'));
     }
 
-    {
-        const [buildHash, tags] = generateTags(branch, version, []);
+    if (moduleType === "all") {
+        const [buildHash, tags] = generateTags(branch, version, moduleType, []);
         console.log(chalk.gray('Building voice server with tags ' + tags.map(e => chalk.white(chalk.bold(e))).join(', ')));
-        await buildDocker(voiceServerImageName, tags, branch, './voice-server/Dockerfile', buildHash);
+        await buildDocker(voiceServerImageName, tags, branch, './voice-server/Dockerfile', moduleType, buildHash);
         console.log(chalk.green('Voice server on branch ') + chalk.white(chalk.bold(branch)) + chalk.green(' built successfully'));
     }
 
@@ -123,7 +127,8 @@ async function buildBranch(branch) {
 async function run() {
     console.log(chalk.gray('Building alt:V Docker images with ') + chalk.white(chalk.bold(cacheEnabled ? 'cache (images will be pushed automatically)' : 'no cache')));
     for (const branch of branches) {
-        await buildBranch(branch);
+        await buildBranch(branch, "js");
+        await buildBranch(branch, "all");
     }
 }
 
