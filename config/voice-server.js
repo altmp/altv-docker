@@ -1,7 +1,7 @@
 import {arr, bool, exists, generate, jsonObj, num, obj, str} from "./base.js";
 
 process.exit(generate('voice.toml', () => ({
-    secret: num('ALTV_SECRET'),
+    secret: num('ALTV_SECRET') ?? 0,
     host: str('ALTV_HOST'),
     port: num('ALTV_PORT'),
     playerHost: str('ALTV_PLAYER_HOST'),
