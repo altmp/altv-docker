@@ -52,6 +52,7 @@ process.exit(generate('server.toml', () => {
         maxClientScriptEventSize: num('ALTV_MAX_CLIENT_SCRIPT_EVENT_SIZE'),
         maxServerScriptEventSize: num('ALTV_MAX_SERVER_SCRIPT_EVENT_SIZE'),
         allowUnknownRPCEvents: bool('ALTV_ALLOW_UNKNOWN_RPC_EVENTS'),
+        enableSyncedMetaData: bool('ALTV_ENABLE_SYNCED_META_DATA'),
         voice: obj({
             bitrate: num('ALTV_VOICE_BITRATE'),
             externalSecret: num('ALTV_VOICE_EXTERNAL_SECRET'),
