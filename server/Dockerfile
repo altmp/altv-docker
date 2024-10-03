@@ -33,7 +33,7 @@ FROM base-${MODULES} as ready
 
 USER root
 
-RUN npm i -g altv-pkg@latest
+RUN npm i -g altv-pkg@^2.10.0
 
 ADD ./config /root/setup
 RUN cd /root/setup && npm i
