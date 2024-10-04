@@ -15,7 +15,7 @@ RUN apt autoremove -y
 RUN apt-get clean
 
 RUN mkdir /altv
-RUN echo '{"loadBytecodeModule":true,"loadCSharpModule":true}' > /altv/.altvpkgrc.json
+RUN echo '{"loadBytecodeModule":true,"loadCSharpModule":true,"loadJSV2Module":true}' > /altv/.altvpkgrc.json
 
 FROM node:20.11.0-bookworm-slim as base-js
 
@@ -27,7 +27,7 @@ RUN apt autoremove -y
 RUN apt-get clean
 
 RUN mkdir /altv
-RUN echo '{"loadBytecodeModule":true}' > /altv/.altvpkgrc.json
+RUN echo '{"loadBytecodeModule":true,"loadJSV2Module":true}' > /altv/.altvpkgrc.json
 
 FROM base-${MODULES} as ready
 
